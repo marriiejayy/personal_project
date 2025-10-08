@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <h1>Student performance tracker</h1>
+
+        <div class="img">
+            <img src="" alt="">
+        </div>
+
+        <form>
+            <div class="studentName">
+                <label for="name">Students name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter students name">
+            </div>
+
+            <div class="studentAge">
+                <label for="age">Students age:</label>
+                <input type="number" id="age" name="age" placeholder="Enter student Age">
+            </div>
+
+            <div class="studentClass">
+                <label for="class">Students class:</label>
+                <input type="text" id="class" name="class" placeholder="Enter studentClass">
+            </div>
+
+             <div class="score">
+                <label for="score">Students score in chemistry:</label>
+                <input type="number" id="score" name="score" placeholder="Enter student Score">
+
+                <label for="score">Students score in physics:</label>
+                <input type="number" id="score" name="score" placeholder="Enter student Score">
+
+                <label for="score">Students score in biology:</label>
+                <input type="number" id="score" name="score" placeholder="Enter student Score">
+            </div>
+
+            <button type="submit" onclick="studentInformation()">Enter</button>
+            <button type="submit" onclick="update()">Update</button>
+
+        </form>
+
+        <div class="search" id="search">🔍Search</div>
+
+        <table border="2" id="table" class="table">
+            <th>Student Name</th>
+            <th>Student Age</th>
+            <th>Student Class</th>
+            <th>Average score</th>
+            <th>Performance category</th>
+            <th>Update</th>
+        </table>
+
+        <th id="display"></th>
+
+    </div>
+</body>
+
+</html>

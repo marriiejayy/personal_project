@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My To-Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .task-form {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .add-btn:active {
+            transform: translateY(0);
+        }
+
+        .filters {
+            padding: 20px 30px;
+            background: white;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tasks-container {
+            padding: 30px;
+            min-height: 300px;
+        }
+
+        .task-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .task-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .task-item.high {
+            border-left: 5px solid #dc3545;
+        }
+
+        .task-item.medium {
+            border-left: 5px solid #fd7e14;
+        }
+
+        .task-item.low {
+            border-left: 5px solid #28a745;
+        }
+
+        .task-item.completed .task-details h3,
+        .task-item.completed .task-details p {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .task-details {
+            flex: 1;
+        }
+
+        .task-details h3 {
+            font-size: 1.2em;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+
+        .task-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .task-info span {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .priority-badge.high {
+            background: #dc3545;
+            color: white;
+        }
+
+        .priority-badge.medium {
+            background: #fd7e14;
+            color: white;
+        }
+
+        .priority-badge.low {
+            background: #28a745;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .task-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tasks"></i> My To-Do List</h1>
+            <p>Organize your tasks and boost your productivity</p>
+        </div>
+
+        <div class="task-form">
+            <form id="todoForm">
+                <div class="form-group">
+                    <label for="taskName"><i class="fas fa-pen"></i> Task Name</label>
+                    <input type="text" id="taskName" placeholder="Enter your task..." required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskPriority"><i class="fas fa-flag"></i> Priority</label>
+                        <select id="taskPriority" required>
+                            <option value="high">High Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDate"><i class="fas fa-calendar"></i> Due Date</label>
+                        <input type="date" id="taskDate" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="add-btn">
+                    <i class="fas fa-plus-circle"></i> Add Task
+                </button>
+            </form>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">
+                <i class="fas fa-list"></i> All Tasks
+            </button>
+            <button class="filter-btn" data-filter="pending">
+                <i class="fas fa-clock"></i> Pending
+            </button>
+            <button class="filter-btn" data-filter="completed">
+                <i class="fas fa-check-circle"></i> Completed
+            </button>
+        </div>
+
+        <div class="tasks-container" id="tasksContainer">
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>No tasks yet!</h3>
+                <p>Add your first task to get started</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+        let currentFilter = 'all';
+
+        // Load tasks from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+            setMinDate();
+        });
+
+        // Set minimum date to today
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDate').min = today;
+        }
+
+        // Load tasks from localStorage
+        function loadTasks() {
+            const stored = localStorage.getItem('todoTasks');
+            if (stored) {
+                tasks = JSON.parse(stored);
+                renderTasks();
+            }
+        }
+
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('todoTasks', JSON.stringify(tasks));
+        }
+
+        // Handle form submission
+        document.getElementById('todoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const taskName = document.getElementById('taskName').value;
+            const taskPriority = document.getElementById('taskPriority').value;
+            const taskDate = document.getElementById('taskDate').value;
+
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                priority: taskPriority,
+                dueDate: taskDate,
+                completed: false
+            };
+
+            tasks.push(newTask);
+            saveTasks();
+            renderTasks();
+
+            // Reset form
+            e.target.reset();
+        });
+
+        // Handle filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // Render tasks
+        function renderTasks() {
+            const container = document.getElementById('tasksContainer');
+            
+            let filteredTasks = tasks;
+            if (currentFilter === 'completed') {
+                filteredTasks = tasks.filter(task => task.completed);
+            } else if (currentFilter === 'pending') {
+                filteredTasks = tasks.filter(task => !task.completed);
+            }
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>No ${currentFilter === 'all' ? '' : currentFilter} tasks!</h3>
+                        <p>${currentFilter === 'all' ? 'Add your first task to get started' : 'Try a different filter'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredTasks.map(task => `
+                <div class="task-item ${task.priority} ${task.completed ? 'completed' : ''}">
+                    <input type="checkbox" class="task-checkbox" 
+                           ${task.completed ? 'checked' : ''} 
+                           onchange="toggleComplete(${task.id})">
+                    
+                    <div class="task-details">
+                        <h3>${task.name}</h3>
+                        <div class="task-info">
+                            <span><i class="fas fa-calendar"></i> ${formatDate(task.dueDate)}</span>
+                            <span class="priority-badge ${task.priority}">
+                                <i class="fas fa-flag"></i> ${task.priority.toUpperCase()}
+                            </span>
+                            <span><i class="fas fa-${task.completed ? 'check-circle' : 'clock'}"></i> 
+                                ${task.completed ? 'Completed' : 'Pending'}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Toggle task completion
+        function toggleComplete(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        // Delete task
+        function deleteTask(id) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                tasks = tasks.filter(t => t.id !== id);
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+    </script>
+</body>
+</html>

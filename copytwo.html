@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Performance Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2b6777;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    input, button {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #2b6777;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #409aaf;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .performance {
+      font-weight: bold;
+      padding: 5px 8px;
+      border-radius: 5px;
+    }
+
+    .excellent {
+      background-color: #c8f7c5;
+      color: green;
+    }
+
+    .good {
+      background-color: #fff8b3;
+      color: #b8860b;
+    }
+
+    .needs-help {
+      background-color: #f7c5c5;
+      color: red;
+    }
+
+    .search-section {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .search-section input {
+      width: 50%;
+      padding: 10px;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .search-section input {
+        width: 80%;
+      }
+
+      table {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎓 Student Performance Tracker</h1>
+
+  <section class="form-section">
+    <h2>Add Student</h2>
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="number" id="age" placeholder="Age" required />
+      <input type="text" id="className" placeholder="Class" required />
+      <input type="url" id="image" placeholder="Image URL" required />
+      <input type="number" id="subject1" placeholder="Score 1" required />
+      <input type="number" id="subject2" placeholder="Score 2" required />
+      <input type="number" id="subject3" placeholder="Score 3" required />
+      <button type="submit">Add Student</button>
+    </form>
+  </section>
+
+  <section class="search-section">
+    <input type="text" id="searchInput" placeholder="Search by name..." />
+  </section>
+
+  <section class="table-section">
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Average</th>
+          <th>Performance</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody"></tbody>
+    </table>
+  </section>
+
+  <script>
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+
+    const studentForm = document.getElementById("studentForm");
+    const studentTableBody = document.getElementById("studentTableBody");
+    const searchInput = document.getElementById("searchInput");
+
+    studentForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const age = document.getElementById("age").value;
+      const className = document.getElementById("className").value.trim();
+      const image = document.getElementById("image").value.trim();
+      const scores = [
+        Number(document.getElementById("subject1").value),
+        Number(document.getElementById("subject2").value),
+        Number(document.getElementById("subject3").value),
+      ];
+
+      const average = (scores[0] + scores[1] + scores[2]) / 3;
+      let performance = "";
+      if (average >= 75) performance = "Excellent";
+      else if (average >= 50) performance = "Good";
+      else performance = "Needs Help";
+
+      const student = { name, age, className, image, average, performance };
+      students.push(student);
+      localStorage.setItem("students", JSON.stringify(students));
+
+      displayStudents(students);
+      studentForm.reset();
+    });
+
+    function displayStudents(list) {
+      studentTableBody.innerHTML = "";
+
+      list.forEach((student, index) => {
+        const row = document.createElement("tr");
+
+        const imgCell = `<td><img src="${student.image}" alt="Student Image"></td>`;
+        const nameCell = `<td>${student.name}</td>`;
+        const classCell = `<td>${student.className}</td>`;
+        const avgCell = `<td>${student.average.toFixed(2)}</td>`;
+        const perfClass =
+          student.performance === "Excellent"
+            ? "excellent"
+            : student.performance === "Good"
+            ? "good"
+            : "needs-help";
+        const perfCell = `<td><span class="performance ${perfClass}">${student.performance}</span></td>`;
+        const deleteCell = `<td><button onclick="deleteStudent(${index})">Delete</button></td>`;
+
+        row.innerHTML = imgCell + nameCell + classCell + avgCell + perfCell + deleteCell;
+        studentTableBody.appendChild(row);
+      });
+    }
+
+    function deleteStudent(index) {
+      students.splice(index, 1);
+      localStorage.setItem("students", JSON.stringify(students));
+      displayStudents(students);
+    }
+
+    searchInput.addEventListener("keyup", () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = students.filter((student) =>
+        student.name.toLowerCase().includes(query)
+      );
+      displayStudents(filtered);
+    });
+
+    displayStudents(students);
+  </script>
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Tracker</title>
+    <style>
+        /* Remove default spacing from all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Style the page background */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #6a5acd;
+            padding: 20px;
+        }
+
+        /* Main container box */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 0;
+        }
+
+        /* Header section at top */
+        .header {
+            background-color: #6a5acd;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        /* Main content area */
+        .content {
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* Left side - Form section */
+        .left-section {
+            flex: 0 0 350px;
+            min-width: 350px;
+        }
+
+        /* Right side - Table section */
+        .right-section {
+            flex: 1;
+        }
+
+        /* Form box styling */
+        .form-box {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-box h2 {
+            color: #6a5acd;
+            margin-bottom: 20px;
+        }
+
+        /* Input field styling */
+        .input-row {
+            margin-bottom: 15px;
+        }
+
+        .input-row label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-row input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Add button styling */
+        .add-button {
+            background-color: #6a5acd;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-button:hover {
+            background-color: #5a4ab7;
+        }
+
+        /* Search box styling */
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Make table scrollable */
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table thead {
+            background-color: #6a5acd;
+            color: white;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Student photo styling */
+        .student-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+        }
+
+        /* Performance badge colors */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .excellent {
+            background-color: lightgreen;
+            color: darkgreen;
+        }
+
+        .good {
+            background-color: lightyellow;
+            color: #856404;
+        }
+
+        .needs-help {
+            background-color: lightcoral;
+            color: darkred;
+        }
+
+        /* Delete button styling */
+        .delete-button {
+            background-color: red;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
+        }
+
+        /* Message when no students exist */
+        .no-students {
+            text-align: center;
+            padding: 50px;
+            color: gray;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 1024px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .left-section {
+                flex: 1;
+                width: 100%;
+                min-width: auto;
+            }
+
+            .form-box {
+                position: static;
+            }
+
+            .right-section {
+                width: 100%;
+            }
+        }
+
+        /* Custom popup overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        /* Popup box */
+        .popup-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            min-width: 300px;
+            z-index: 1001;
+        }
+
+        /* Popup message text */
+        .popup-message {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Popup buttons */
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .popup-ok-btn {
+            background-color: #6a5acd;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .popup-ok-btn:hover {
+            background-color: #5a4ab7;
+        }
+
+        .popup-cancel-btn {
+            background-color: #999;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .popup-cancel-btn:hover {
+            background-color: #777;
+        }
+
+        /* Success popup styling */
+        .popup-box.success .popup-message {
+            color: green;
+        }
+
+        /* Error popup styling */
+        .popup-box.error .popup-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container -->
+    <div class="container">
+        
+        <!-- Header section -->
+        <div class="header">
+            <h1>🎯 Student Performance Tracker</h1>
+            <p>Track and manage student performance easily</p>
+        </div>
+
+        <!-- Content section -->
+        <div class="content">
+            
+            <!-- LEFT SIDE: Form to add new student -->
+            <div class="left-section">
+                <div class="form-box">
+                    <h2>Add New Student</h2>
+                    
+                    <div class="input-row">
+                        <label>Student Name:</label>
+                        <input type="text" id="name" placeholder="Enter student name">
+                    </div>
+
+                    <div class="input-row">
+                        <label>Age:</label>
+                        <input type="number" id="age" placeholder="Enter age">
+                    </div>
+
+                    <div class="input-row">
+                        <label>Class:</label>
+                        <input type="text" id="class" placeholder="Enter class (e.g., Grade 10)">
+                    </div>
+
+                    <div class="input-row">
+                        <label>Image URL:</label>
+                        <input type="text" id="image" placeholder="Enter image URL">
+                    </div>
+
+                    <div class="input-row">
+                        <label>Subject 1 Score:</label>
+                        <input type="number" id="subject1" placeholder="Enter score (0-100)">
+                    </div>
+
+                    <div class="input-row">
+                        <label>Subject 2c Score:</label>
+                        <input type="number" id="subject2" placeholder="Enter score (0-100)">
+                    </div>
+
+                    <div class="input-row">
+                        <label>Subject 3 Score:</label>
+                        <input type="number" id="subject3" placeholder="Enter score (0-100)">
+                    </div>
+
+                    <!-- Button to add student -->
+                    <button class="add-button" onclick="addStudent()">Add Student</button>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: Student list and table -->
+            <div class="right-section">
+                <!-- Search box -->
+                <div class="search-box">
+                    <input type="text" id="search" placeholder="🔍 Search student by name..." onkeyup="searchStudent()">
+                </div>
+
+                <!-- Students table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Class</th>
+                                <th>Average</th>
+                                <th>Performance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTable">
+                            <!-- Student rows will appear here -->
+                        </tbody>
+                    </table>
+
+                    <!-- Show this when no students -->
+                    <div id="noStudents" class="no-students">
+                        <h3>No Students Added Yet</h3>
+                        <p>Add your first student using the form on the left</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // This array stores all our students
+        let students = [];
+
+        // POPUP FUNCTIONS
+
+        // Show a simple message popup (like alert)
+        function showMessage(message, type = 'info') {
+            const overlay = document.getElementById('popupOverlay');
+            const popupBox = document.getElementById('popupBox');
+            const popupMessage = document.getElementById('popupMessage');
+            const popupButtons = document.getElementById('popupButtons');
+
+            // Set the message
+            popupMessage.textContent = message;
+
+            // Set the type (success or error)
+            popupBox.className = 'popup-box ' + type;
+
+            // Create OK button
+            popupButtons.innerHTML = '<button class="popup-ok-btn" onclick="closePopup()">OK</button>';
+
+            // Show the popup
+            overlay.style.display = 'block';
+        }
+
+        // Show a confirmation popup (like confirm)
+        function showConfirm(message, onConfirm) {
+            const overlay = document.getElementById('popupOverlay');
+            const popupBox = document.getElementById('popupBox');
+            const popupMessage = document.getElementById('popupMessage');
+            const popupButtons = document.getElementById('popupButtons');
+
+            // Set the message
+            popupMessage.textContent = message;
+
+            // Reset type
+            popupBox.className = 'popup-box';
+
+            // Create Yes and No buttons
+            popupButtons.innerHTML = `
+                <button class="popup-ok-btn" onclick="confirmAction(true)">Yes</button>
+                <button class="popup-cancel-btn" onclick="confirmAction(false)">No</button>
+            `;
+
+            // Store the callback function
+            window.pendingConfirmAction = onConfirm;
+
+            // Show the popup
+            overlay.style.display = 'block';
+        }
+
+        // Handle confirmation response
+        function confirmAction(confirmed) {
+            closePopup();
+            if (confirmed && window.pendingConfirmAction) {
+                window.pendingConfirmAction();
+            }
+            window.pendingConfirmAction = null;
+        }
+
+        // Close the popup
+        function closePopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.style.display = 'none';
+        }
+
+        // MAIN FUNCTIONS
+
+        // FUNCTION 1: Add a new student
+        function addStudent() {
+            // Step 1: Get values from input fields
+            const studentName = document.getElementById('name').value;
+            const studentAge = document.getElementById('age').value;
+            const studentClass = document.getElementById('class').value;
+            const studentImage = document.getElementById('image').value;
+            const score1 = document.getElementById('subject1').value;
+            const score2 = document.getElementById('subject2').value;
+            const score3 = document.getElementById('subject3').value;
+
+            // Step 2: Check if all fields are filled
+            if (studentName === '' || studentAge === '' || studentClass === '' || 
+                studentImage === '' || score1 === '' || score2 === '' || score3 === '') {
+                showMessage('Please fill in all fields!', 'error');
+                return; // Stop the function here
+            }
+
+            // Step 3: Convert scores to numbers
+            const subject1Score = Number(score1);
+            const subject2Score = Number(score2);
+            const subject3Score = Number(score3);
+
+            // Step 4: Calculate the average score
+            let average = (subject1Score + subject2Score + subject3Score) / 3;
+            average = average.toFixed(2); // Round to 2 decimal places
+
+            // Step 5: Create a student object
+            const student = {
+                id: Date.now(), // Unique ID using timestamp
+                name: studentName,
+                age: studentAge,
+                class: studentClass,
+                image: studentImage,
+                average: average
+            };
+
+            // Step 6: Add student to our array
+            students.push(student);
+
+            // Step 7: Display all students
+            displayStudents();
+
+            // Step 8: Clear the form
+            clearForm();
+
+            // Step 9: Show success message
+            showMessage('Student added successfully!', 'success');
+        }
+
+        // FUNCTION 2: Display all students in the table
+        function displayStudents() {
+            // Get the table body element
+            const tableBody = document.getElementById('studentTable');
+            const noStudentsMsg = document.getElementById('noStudents');
+
+            // Clear the table first
+            tableBody.innerHTML = '';
+
+            // Check if there are any students
+            if (students.length === 0) {
+                noStudentsMsg.style.display = 'block'; // Show "no students" message
+                return; // Stop here
+            } else {
+                noStudentsMsg.style.display = 'none'; // Hide "no students" message
+            }
+
+            // Loop through each student and create a row
+            for (let i = 0; i < students.length; i++) {
+                const student = students[i];
+
+                // Determine performance category
+                const performance = getPerformance(student.average);
+
+                // Create a new row
+                let row = '<tr>';
+                row += '<td><img src="' + student.image + '" class="student-photo" onerror="this.src=\'https://via.placeholder.com/50\'"></td>';
+                row += '<td><strong>' + student.name + '</strong></td>';
+                row += '<td>' + student.age + '</td>';
+                row += '<td>' + student.class + '</td>';
+                row += '<td><strong>' + student.average + '%</strong></td>';
+                row += '<td><span class="badge ' + performance.colorClass + '">' + performance.text + '</span></td>';
+                row += '<td><button class="delete-button" onclick="deleteStudent(' + student.id + ')">Delete</button></td>';
+                row += '</tr>';
+
+                // Add row to table
+                tableBody.innerHTML += row;
+            }
+        }
+
+        // FUNCTION 3: Get performance category based on average
+        function getPerformance(average) {
+            if (average >= 75) {
+                return { text: 'Excellent', colorClass: 'excellent' };
+            } else if (average >= 50) {
+                return { text: 'Good', colorClass: 'good' };
+            } else {
+                return { text: 'Needs Help', colorClass: 'needs-help' };
+            }
+        }
+
+        // FUNCTION 4: Delete a student
+        function deleteStudent(studentId) {
+            // Show confirmation popup
+            showConfirm('Are you sure you want to delete this student?', function() {
+                // Find and remove the student from array
+                const newStudents = [];
+                for (let i = 0; i < students.length; i++) {
+                    if (students[i].id !== studentId) {
+                        newStudents.push(students[i]);
+                    }
+                }
+                students = newStudents;
+
+                // Refresh the table
+                displayStudents();
+
+                // Show success message
+                showMessage('Student deleted successfully!', 'success');
+            });
+        }
+
+        // FUNCTION 5: Search for students by name
+        function searchStudent() {
+            // Get search text
+            const searchText = document.getElementById('search').value.toLowerCase();
+
+            // Get the table body
+            const tableBody = document.getElementById('studentTable');
+            const noStudentsMsg = document.getElementById('noStudents');
+
+            // Clear table
+            tableBody.innerHTML = '';
+
+            // Find matching students
+            const matchingStudents = [];
+            for (let i = 0; i < students.length; i++) {
+                const studentName = students[i].name.toLowerCase();
+                if (studentName.includes(searchText)) {
+                    matchingStudents.push(students[i]);
+                }
+            }
+
+            // Check if any students match
+            if (matchingStudents.length === 0) {
+                noStudentsMsg.style.display = 'block';
+                return;
+            } else {
+                noStudentsMsg.style.display = 'none';
+            }
+
+            // Display matching students
+            for (let i = 0; i < matchingStudents.length; i++) {
+                const student = matchingStudents[i];
+                const performance = getPerformance(student.average);
+
+                let row = '<tr>';
+                row += '<td><img src="' + student.image + '" class="student-photo" onerror="this.src=\'https://via.placeholder.com/50\'"></td>';
+                row += '<td><strong>' + student.name + '</strong></td>';
+                row += '<td>' + student.age + '</td>';
+                row += '<td>' + student.class + '</td>';
+                row += '<td><strong>' + student.average + '%</strong></td>';
+                row += '<td><span class="badge ' + performance.colorClass + '">' + performance.text + '</span></td>';
+                row += '<td><button class="delete-button" onclick="deleteStudent(' + student.id + ')">Delete</button></td>';
+                row += '</tr>';
+
+                tableBody.innerHTML += row;
+            }
+        }
+
+        // FUNCTION 6: Clear all form fields
+        function clearForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('class').value = '';
+            document.getElementById('image').value = '';
+            document.getElementById('subject1').value = '';
+            document.getElementById('subject2').value = '';
+            document.getElementById('subject3').value = '';
+        }
+
+        // When page loads, display students (empty at first)
+        displayStudents();
+    </script>
+</body>
+</html>

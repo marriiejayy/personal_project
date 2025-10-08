@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Tracker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
+        }
+
+        .table-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-container input {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .student-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e9ecef;
+        }
+
+        .performance-excellent {
+            color: #28a745;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+
+        .performance-good {
+            color: #ffc107;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+
+        .performance-needs-help {
+            color: #dc3545;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6a11cb;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Student Performance Tracker</h1>
+            <p class="subtitle">Manage classroom records and track student performance</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="total-students">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="excellent-count">0</div>
+                <div class="stat-label">Excellent</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="good-count">0</div>
+                <div class="stat-label">Good</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="needs-help-count">0</div>
+                <div class="stat-label">Needs Help</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <section class="form-section">
+                <h2>Add New Student</h2>
+                <form id="student-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="5" max="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="class">Class</label>
+                        <select id="class" required>
+                            <option value="">Select Class</option>
+                            <option value="Grade 1">Grade 1</option>
+                            <option value="Grade 2">Grade 2</option>
+                            <option value="Grade 3">Grade 3</option>
+                            <option value="Grade 4">Grade 4</option>
+                            <option value="Grade 5">Grade 5</option>
+                            <option value="Grade 6">Grade 6</option>
+                            <option value="Grade 7">Grade 7</option>
+                            <option value="Grade 8">Grade 8</option>
+                            <option value="Grade 9">Grade 9</option>
+                            <option value="Grade 10">Grade 10</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image-url">Profile Image URL</label>
+                        <input type="url" id="image-url" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="math">Math Score</label>
+                        <input type="number" id="math" min="0" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="science">Science Score</label>
+                        <input type="number" id="science" min="0" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="english">English Score</label>
+                        <input type="number" id="english" min="0" max="100" required>
+                    </div>
+                    <button type="submit" class="btn">Add Student</button>
+                </form>
+            </section>
+
+            <section class="table-section">
+                <h2>Student Records</h2>
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Search students by name...">
+                </div>
+                <div class="table-container">
+                    <table id="student-table">
+                        <thead>
+                            <tr>
+                                <th>Profile</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Class</th>
+                                <th>Average</th>
+                                <th>Performance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-table-body">
+                            <!-- Student rows will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                    <div id="empty-state" class="empty-state">
+                        <h3>No students added yet</h3>
+                        <p>Add your first student using the form on the left</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Student Performance Tracker &copy; 2023 | Built with HTML, CSS & JavaScript</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const studentForm = document.getElementById('student-form');
+        const studentTableBody = document.getElementById('student-table-body');
+        const searchInput = document.getElementById('search');
+        const emptyState = document.getElementById('empty-state');
+        const totalStudentsEl = document.getElementById('total-students');
+        const excellentCountEl = document.getElementById('excellent-count');
+        const goodCountEl = document.getElementById('good-count');
+        const needsHelpCountEl = document.getElementById('needs-help-count');
+
+        // Sample student data for initial testing
+        const sampleStudents = [
+            {
+                id: 1,
+                name: "Emma Johnson",
+                age: 14,
+                class: "Grade 8",
+                imageUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                math: 85,
+                science: 92,
+                english: 88
+            },
+            {
+                id: 2,
+                name: "Noah Williams",
+                age: 15,
+                class: "Grade 9",
+                imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                math: 78,
+                science: 82,
+                english: 75
+            },
+            {
+                id: 3,
+                name: "Olivia Brown",
+                age: 13,
+                class: "Grade 7",
+                imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                math: 65,
+                science: 70,
+                english: 72
+            },
+            {
+                id: 4,
+                name: "Liam Jones",
+                age: 16,
+                class: "Grade 10",
+                imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                math: 45,
+                science: 52,
+                english: 48
+            },
+            {
+                id: 5,
+                name: "Ava Garcia",
+                age: 14,
+                class: "Grade 8",
+                imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+                math: 92,
+                science: 95,
+                english: 90
+            }
+        ];
+
+        // Initialize students from localStorage or use sample data
+        let students = JSON.parse(localStorage.getItem('students')) || sampleStudents;
+
+        // Function to calculate average score
+        function calculateAverage(math, science, english) {
+            return Math.round((math + science + english) / 3);
+        }
+
+        // Function to determine performance category
+        function getPerformanceCategory(average) {
+            if (average >= 75) return { text: "Excellent", class: "performance-excellent" };
+            if (average >= 50) return { text: "Good", class: "performance-good" };
+            return { text: "Needs Help", class: "performance-needs-help" };
+        }
+
+        // Function to save students to localStorage
+        function saveStudents() {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // Function to render student table
+        function renderStudentTable(studentsToRender = students) {
+            studentTableBody.innerHTML = '';
+            
+            if (studentsToRender.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            studentsToRender.forEach(student => {
+                const average = calculateAverage(student.math, student.science, student.english);
+                const performance = getPerformanceCategory(average);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img src="${student.imageUrl}" alt="${student.name}" class="student-img" onerror="this.src='https://via.placeholder.com/50'"></td>
+                    <td>${student.name}</td>
+                    <td>${student.age}</td>
+                    <td>${student.class}</td>
+                    <td>${average}%</td>
+                    <td><span class="${performance.class}">${performance.text}</span></td>
+                    <td><button class="delete-btn" data-id="${student.id}">Delete</button></td>
+                `;
+                studentTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteStudent(id);
+                });
+            });
+            
+            updateStats();
+        }
+
+        // Function to update statistics
+        function updateStats() {
+            totalStudentsEl.textContent = students.length;
+            
+            const excellentCount = students.filter(student => {
+                const average = calculateAverage(student.math, student.science, student.english);
+                return average >= 75;
+            }).length;
+            
+            const goodCount = students.filter(student => {
+                const average = calculateAverage(student.math, student.science, student.english);
+                return average >= 50 && average < 75;
+            }).length;
+            
+            const needsHelpCount = students.filter(student => {
+                const average = calculateAverage(student.math, student.science, student.english);
+                return average < 50;
+            }).length;
+            
+            excellentCountEl.textContent = excellentCount;
+            goodCountEl.textContent = goodCount;
+            needsHelpCountEl.textContent = needsHelpCount;
+        }
+
+        // Function to add a new student
+        function addStudent(student) {
+            // Generate a unique ID
+            const id = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
+            student.id = id;
+            
+            students.push(student);
+            saveStudents();
+            renderStudentTable();
+        }
+
+        // Function to delete a student
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                students = students.filter(student => student.id !== id);
+                saveStudents();
+                renderStudentTable();
+                
+                // If search is active, update the search results
+                if (searchInput.value) {
+                    searchStudents();
+                }
+            }
+        }
+
+        // Function to search students
+        function searchStudents() {
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm === '') {
+                renderStudentTable();
+                return;
+            }
+            
+            const filteredStudents = students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm)
+            );
+            
+            renderStudentTable(filteredStudents);
+        }
+
+        // Event Listeners
+        studentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const age = parseInt(document.getElementById('age').value);
+            const studentClass = document.getElementById('class').value;
+            const imageUrl = document.getElementById('image-url').value || 'https://via.placeholder.com/50';
+            const math = parseInt(document.getElementById('math').value);
+            const science = parseInt(document.getElementById('science').value);
+            const english = parseInt(document.getElementById('english').value);
+            
+            const newStudent = {
+                name,
+                age,
+                class: studentClass,
+                imageUrl,
+                math,
+                science,
+                english
+            };
+            
+            addStudent(newStudent);
+            studentForm.reset();
+        });
+
+        searchInput.addEventListener('input', searchStudents);
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderStudentTable();
+        });
+    </script>
+</body>
+</html>
