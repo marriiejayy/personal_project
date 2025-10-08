@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    padding: 30px;
+    display: flex;
+    justify-content: left;
+}
+
+.container {
+    width: 100%;
+    border-radius: 10px;
+    padding: 20px ;
+}
+
+.header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.header p {
+    font-size: 22px;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.content {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.left-section {
+    font-size: 20px;
+    font-weight: bold;   
+}
+
+.form-box {
+    background-color: rgb(129, 91, 129);
+    padding: 20px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    position: sticky;
+}
+
+.form {
+    padding-bottom: 2px;
+    margin-top: 10px;
+}
+
+.input-row {
+    padding-bottom: 20px;
+}
+
+label {
+    display: block;
+
+}
+
+input {
+    border: none;
+    border-radius: 5px;
+    width: 290px;
+    padding: 10px;
+}
+
+input::placeholder {
+    font-style: italic;
+}
+
+.right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 5px;
+
+}
+
+.search-box {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+
+.search-box::placeholder {
+    font-style: italic;
+}
+
+table{
+    border: 2px solid black;
+}
+
+th{
+    border: 2px solid black;
+}
+
+#noStudents {
+    text-align: center;
+}
+
+.add-button {
+    background-color: rgb(107, 38, 86);
+    color: white;
+    border: none;
+}
+
+.add-button:hover {
+    background-color: green;
+    cursor: pointer;
+}

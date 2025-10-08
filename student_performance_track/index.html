@@ -13,24 +13,97 @@
     <div class="container">
         <div class="header">
             <h1>Student Performance Tracker</h1>
-            <p>Track and engage student performance easily</p>
+            <p>To track and engage student performance easily</p>
         </div>
 
         <div class="content">
             <div class="left-section">
+
                 <div class="form-box">
                     <h2>Add new students</h2>
+                    <form class="form">
+                        <div class="input-row">
+                            <label for="name">Student name</label>
+                            <input type="text" id="name" placeholder="Enter student name">
+                        </div>
+
+                        <div class="input-row">
+                            <label for="age">Student age</label>
+                            <input type="number" id="age" placeholder="Enter student age" required>
+                        </div>
+
+                        <div class="input-row">
+                            <label for="class">Student class</label>
+                            <input type="text" id="class" placeholder="Enter student class" required>
+                        </div>
+
+                        <div class="input-row">
+                            <label for="name">Student image</label>
+                            <input type="url" id="url" placeholder="Paste image url" required>
+                        </div>
+
+                        <div class="input-row">
+                            <label for="name">Physics score</label>
+                            <input type="number" id="physics" placeholder="Enter physics score" required>
+                        </div>
+
+                        <div class="input-row">
+                            <label for="name">Chemistry score</label>
+                            <input type="number" id="chemistry" placeholder="Enter chemistry score" required>
+                        </div>
+
+                        <div class="input-row">
+                            <label for="name">Biology score</label>
+                            <input type="number" id="Biology" placeholder="Enter biology score" required>
+                        </div>
+
+                        <div>
+                            <button class="add-button" onclick="addStudent()">Add student</button>
+                        </div>
+                    </form>
+
+                    <!-- <div>
+                        <button class="add-button" onclick="addStudent()">Add student</button>
+                    </div> -->
 
                 </div>
 
             </div>
+
             <div class="right-section">
 
+                <div class="search-box">
+                    <input type="text" id="search" placeholder="🔍search student by name ">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>photo</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Class</th>
+                                <th>Chemistry</th>
+                                <th>Physics</th>
+                                <th>Biology</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="studentTable">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="noStudents" class="no-students">
+                    <h3>No students added yet</h3>
+                    <p>Add student using the form on the left</p>
+                </div>
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>

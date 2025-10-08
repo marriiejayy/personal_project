@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    height:  100vh;
+}
+
+.main-body {
+    background-color: rgb(247, 250, 249);
+    color: rgb(19, 18, 18);
+    margin: 10px 20px;
+    padding: 10px 20px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+
+
+@media (max-width:680px) {
+    .body {
+        width: 100%;
+        font-size: 24px;
+        
+    }
+}
